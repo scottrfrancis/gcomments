@@ -21,7 +21,7 @@ Vagrant.configure(2) do |config|
   # config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.network "forwarded_port", guest: 88, host: 8080
   # node
-  config.vm.network "forwarded_port", guest: 8000, host: 8000
+  config.vm.network "forwarded_port", guest: 8080, host: 8000
 #  config.vm.network "forwarded_port", guest: 3001, host: 3031
   # flask
   config.vm.network "forwarded_port", guest: 5001, host: 8051
