@@ -1,90 +1,55 @@
-<script>
-  var GoogleAuth;
-  var SCOPE = 'https://www.googleapis.com/auth/drive.metadata.readonly';
-  function handleClientLoad() {
-    // Load the API's client and auth2 modules.
-    // Call the initClient function after the modules load.
-    gapi.load('client:auth2', initClient);
-  }
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Shopping List Check Off</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <style>
+      .emptyMessage {
+        font-weight: bold;
+        color: red;
+        font-size: 1.2em;
+      }
+      li {
+        margin-bottom: 7px;
+        font-size: 1.2em;
+      }
+      li > button {
+        margin-left: 6px;
+      }
+      button > span {
+        color: green;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="app.js"></script>
+  </head>
+<body ng-app="ShoppingListCheckOff">
+  <div class="container">
+  <h1>Shopping List Check Off</h1>
 
-  function initClient() {
-    // Retrieve the discovery document for version 3 of Google Drive API.
-    // In practice, your app can retrieve one or more discovery documents.
-    var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+  <div class="row">
 
-    // Initialize the gapi.client object, which app uses to make API requests.
-    // Get API key and client ID from API Console.
-    // 'scope' field specifies space-delimited list of access scopes.
-    gapi.client.init({
-        'apiKey': 'e6kdJrOxLq3LlvChOCc58q9t',
-        'discoveryDocs': [discoveryUrl],
-        'clientId': '889437725676-nnfgl4jtpakq6k9ok9ne37hd1lbb8sna.apps.googleusercontent.com',
-        'scope': 'https://www.googleapis.com/auth/drive',
-    }).then(function () {
-      GoogleAuth = gapi.auth2.getAuthInstance();
+    <!-- To Buy List -->
+    <div class="col-md-6" ng-controller="ToBuyController as toBuy">
+     <h2>To Buy:</h2>
+     <ul>
+      <li ng-repeat="item in toBuy.itemList">Buy {{ item.quantity }} {{ item.name }}
+        <button class="btn btn-default" ng-click="toBuy.buyItem($index)">Buy</button></li>
+     </ul>
+     <div class="emptyMessage" ng-if="toBuy.itemList.length <= 0">Everything is bought!</div>
+    </div>
 
-      // Listen for sign-in state changes.
-      GoogleAuth.isSignedIn.listen(updateSigninStatus);
+    <!-- Already Bought List -->
+    <div class="col-md-6" ng-controller="AlreadyBoughtController as bought">
+     <h2>Already Bought:</h2>
+     <ul>
+      <li ng-repeat="item in bought.itemList">Bought {{ item.quantity }} {{ item.name }}</li>
+     </ul>
+     <div class="emptyMessage" ng-if="bought.itemList.length <= 0">Nothing bought yet.</div>
+    </div>
+  </div>
+</div>
 
-      // Handle initial sign-in state. (Determine if user is already signed in.)
-      var user = GoogleAuth.currentUser.get();
-      setSigninStatus();
-
-      // Call handleAuthClick function when user clicks on
-      //      "Sign In/Authorize" button.
-      $('#sign-in-or-out-button').click(function() {
-        handleAuthClick();
-      });
-      $('#revoke-access-button').click(function() {
-        revokeAccess();
-      });
-    });
-  }
-
-  function handleAuthClick() {
-    if (GoogleAuth.isSignedIn.get()) {
-      // User is authorized and has clicked 'Sign out' button.
-      GoogleAuth.signOut();
-    } else {
-      // User is not signed in. Start Google auth flow.
-      GoogleAuth.signIn();
-    }
-  }
-
-  function revokeAccess() {
-    GoogleAuth.disconnect();
-  }
-
-  function setSigninStatus(isSignedIn) {
-    var user = GoogleAuth.currentUser.get();
-    var isAuthorized = user.hasGrantedScopes(SCOPE);
-    if (isAuthorized) {
-      $('#sign-in-or-out-button').html('Sign out');
-      $('#revoke-access-button').css('display', 'inline-block');
-      $('#auth-status').html('You are currently signed in and have granted ' +
-          'access to this app.');
-    } else {
-      $('#sign-in-or-out-button').html('Sign In/Authorize');
-      $('#revoke-access-button').css('display', 'none');
-      $('#auth-status').html('You have not authorized this app or you are ' +
-          'signed out.');
-    }
-  }
-
-  function updateSigninStatus(isSignedIn) {
-    setSigninStatus();
-  }
-</script>
-
-<button id="sign-in-or-out-button"
-        style="margin-left: 25px">Sign In/Authorize</button>
-<button id="revoke-access-button"
-        style="display: none; margin-left: 25px">Revoke access</button>
-
-<div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script async defer src="https://apis.google.com/js/api.js"
-        onload="this.onload=function(){};handleClientLoad()"
-        onreadystatechange="if (this.readyState === 'complete') this.onload()">
-</script>
+</body>
+</html>
