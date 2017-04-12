@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Shopping List Check Off</title>
+    <title>Doc Action Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles/bootstrap.min.css">
     <style>
@@ -21,32 +21,60 @@
         color: green;
       }
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <!-- <script src="lib/angular-google-client.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+
+    <script>
+      var Gapi
+
+      function googleOnLoadCallback(){
+          var initClient = function() {
+            gapi.client.init({
+              discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+              clientId: "540312807168-vc7q1q8le7ln4s7ku9l8950d4dv6mebp.apps.googleusercontent.com",
+              scope: 'https://www.googleapis.com/auth/drive'
+            }).then(function() {
+
+              Gapi = gapi
+            })
+          }
+
+          gapi.load('client:auth2', initClient)
+      }
+    </script>
+    <!-- <script async defer src="https://apis.google.com/js/api.js"
+      onload="googleOnLoadCallback()"
+    ></script> -->
+    <script src="https://apis.google.com/js/api.js?onload=googleOnLoadCallback"></script>
+
+
     <script src="app.js"></script>
   </head>
-<body ng-app="ShoppingListCheckOff">
-  <div class="container">
-  <h1>Shopping List Check Off</h1>
+<body ng-app="DocComments">
+  <div class="container"> <!-- ng-show="checker.getSignedIn()"> -->
+    <button type="button" class="btn btn-primary" ng-hide="checker.getSignedIn()">Authorize</button>
+    <button type="button" class="btn btn-warning" ng-show="checker.getSignedIn()">Sign out</button>
+  <h1>Open Actions from Google Docs</h1>
 
   <div class="row">
 
-    <!-- To Buy List -->
-    <div class="col-md-6" ng-controller="ToBuyController as toBuy">
-     <h2>To Buy:</h2>
+    <!-- Google Docs -->
+    <div class="col-md-6" ng-controller="DocController as docList">
+     <h2>Google Docs:</h2>
      <ul>
-      <li ng-repeat="item in toBuy.itemList">Buy {{ item.quantity }} {{ item.name }}
-        <button class="btn btn-default" ng-click="toBuy.buyItem($index)">Buy</button></li>
+      <li ng-repeat="item in docList.itemList">{{ item.name }}
+        <button class="btn btn-default" ng-click="docList.getActions($index)">Open AIs</button></li>
      </ul>
-     <div class="emptyMessage" ng-if="toBuy.itemList.length <= 0">Everything is bought!</div>
+     <div class="emptyMessage" ng-if="docList.itemList.length <= 0">no files!</div>
     </div>
 
-    <!-- Already Bought List -->
-    <div class="col-md-6" ng-controller="AlreadyBoughtController as bought">
-     <h2>Already Bought:</h2>
+    <!-- Open Actions for File -->
+    <div class="col-md-6" ng-controller="ActionItemController as actionList">
+     <h2>Open Action Items:</h2>
      <ul>
-      <li ng-repeat="item in bought.itemList">Bought {{ item.quantity }} {{ item.name }}</li>
+      <li ng-repeat="item in actionList.itemList">Bought {{ item.htmlContent }}</li>
      </ul>
-     <div class="emptyMessage" ng-if="bought.itemList.length <= 0">Nothing bought yet.</div>
+     <div class="emptyMessage" ng-if="actionList.itemList.length <= 0">No Open Actions.</div>
     </div>
   </div>
 </div>
