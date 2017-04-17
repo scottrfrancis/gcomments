@@ -100,17 +100,33 @@
         <img ng-src="{{ item.iconLink }}"/>
         <img ng-src="{{ item.thumbnailLink }}"/>&nbsp;<a ng-href="{{ item.webViewLink }}" target="_blank">{{ item.name }}</a>
         &nbsp;<button class="btn btn-primary" ng-click="fc.fetchOpenCommentsFor(item.id)">Get AIs</button><br/>
-        <ol ng-show="fc.getOpenCommentsFor(item.id).length > 0">
+        <table ng-show="fc.getOpenCommentsFor(item.id).length > 0" class="table table-striped">
+          <tr ng-repeat="ai in fc.getOpenCommentsFor(item.id)">
+            <td>{{ $index + 1 }}</td>
+            <td>
+              <img ng-src="{{ ai.author.photoLink }}"/><br/>
+              {{ ai.author.displayName }}
+            </td>
+            <td>
+              <p ng-bind-html="fc.getQuotedContent(ai)" class="bg-warning"></p><br/>
+              <div ng-bind-html="fc.getCommentContent(ai)"></div><br/>
+
+          </tr>
+        </table>
+
+
+
+
+        <!-- <ol ng-show="fc.getOpenCommentsFor(item.id).length > 0">
           <li ng-repeat="ai in fc.getOpenCommentsFor(item.id)">
-            <!-- {{ ai }} <br/>
+           {{ ai }} <br/>
             <span ng-hide="ai.resolved" class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
-            <span ng-show="ai.resolved" class="glyphicon glyphicon-check" aria-hidden="true"></span> -->
+            <span ng-show="ai.resolved" class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <p ng-bind-html="fc.getQuotedContent(ai)" class="bg-warning"></p><br/>
             <div ng-bind-html="fc.getCommentContent(ai)"></div><br/>
             <img ng-src="{{ ai.author.photoLink }}"/>&nbsp;{{ ai.author.displayName }}
-          </div>
           </li>
-        </ol>
+        </ol> -->
       </li>
      </ul>
      <!-- <div class="emptyMessage" ng-if="docList.itemList.length <= 0">no files!</div> -->
