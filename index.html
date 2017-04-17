@@ -64,26 +64,31 @@
 
   </head>
 <body ng-app="FilesApp">
-  <div class="container" ng-controller="GapiController as gc">
+  <div class="container" ng-controller="FilesController as fc">
         <google-signin
           clientid="540312807168-vc7q1q8le7ln4s7ku9l8950d4dv6mebp"
         ></google-signin>
         <!-- <p>^ This is a Google Plus sign-in button</p> -->
       <div class="span6">
-        <button ng-hide="gc.isSignedIn()" ng-click="gc.signIn()"
+        <button ng-hide="fc.signedIn" ng-click="fc.signIn()"
           class="btn btn-primary">Authorize</button>
-        <button ng-show="gc.isSignedIn()" ng-click="gc.signOut()"
+        <button ng-show="fc.signedIn" ng-click="fc.signOut()"
           class="btn btn-warning">Sign Out</button>
       </div>
 
-  <h2 ng-show="gc.isSignedIn()">Open Actions from Google Docs</h2>
+  <h2 ng-show="fc.isSignedIn()">Open Actions from Google Docs</h2>
+
 
 
   <div class="row">
     <div class="col-md-6">
      <h2>Google Docs:</h2>
+
+     <button ng-hide="fc.files.length > 0" ng-click="fc.fetchFiles()"
+       class="btn btn-success">Find Files</button>
+
      <ul>
-      <li ng-repeat="item in gc.docList">
+      <li ng-repeat="item in fc.files">
         {{ item.name }}
         <!-- <button class="btn btn-default" ng-click="docList.getActions($index)">Open AIs</button></li> -->
       </li>
@@ -113,6 +118,9 @@
 
 <!-- files app -->
 <script src="js/filesApp.js"></script>
+
+<!-- google drive api service -->
+<script src="js/gdrive.service.js"></script>
 
 
 </body>

@@ -2,106 +2,98 @@
 'use strict'
 
 angular.module('FilesApp', ['googleSignin'])
-  .controller('GapiController', GapiController)
+  .controller('FilesController', FilesController)
   // .service('CommentsService', CommentsService)
   // .controller('CommCtrl', CommCtrl)
 
 
 
-GapiController.$inject = ['$scope']
-function GapiController($scope) {
-    var gc = this
+FilesController.$inject = ['$scope','GdriveService']
+function FilesController($scope, GdriveService) {
+    var fc = this
 
-    var initialized = false
-    var signedIn = false
-    // var email = ""
-    var gapiLib = null
-
-    var docList = {}
+    fc.signedIn = false
+    fc.files = []
     var commentList = {}
 
     $scope.$on('event:google-signin-success', function(event) {
       console.log('signin success')
-      signedIn = true
-      // email = authResult.w3.U3
+      fc.signedIn = true
 
-      gc.getDocumentList()
       $scope.$apply()
     })
 
     $scope.$on('event:google-signin-failure', function(event) {
       console.log('signin failure')
-      signedIn = false
+      fc.signedIn = false
       // email = ""
       $scope.$apply()
     })
 
     $scope.$on('event:gapi-initialized', function(event) {
       console.log('gapi initialized')
-      initialized = true;
-      gapiLib = gapi
+      GdriveService.loadGapi(gapi)
 
       $scope.$apply()
     })
 
-    gc.isSignedIn = function() {
-      return signedIn
+    fc.isSignedIn = function() {
+      fc.signedIn = GdriveService.isSignedIn()
+      return fc.signedIn
     }
 
-    gc.getGapi = function() {
-      return gapiLib
+    fc.signIn = function() {
+      GdriveService.signIn()
     }
 
-    // this.getEmail = function() {
-    //   return email
+    fc.signOut = function() {
+      GdriveService.signOut()
+    }
+
+    fc.fetchFiles = function() {
+      GdriveService.findFiles().then(function() {
+        fc.files = GdriveService.getFiles()
+      })
+    }
+
+
+    // gc.getDocumentList = function() {
+    //   var g = gc.getGapi()
+    //   if (gc.isSignedIn() && g) {
+    //     g.client.drive.files.list({
+    //       'pageSize': 10,
+    //       'fields': "*"
+    //       // 'fields': "iconLink, id, lastModifyingUser, modifiedTime, name, owners, thumbnailLink"
+    //     }).then(function(response) {
+    //       var files = response.result.files
+    //       gc.docList  = response.result.files
+    //       // if (files && files.length > 0) {
+    //       //   for (var i = 0; i < files.length; i++) {
+    //       //     var f = files[i]
+    //       //     // fetchCommentsFor(f.id)
+    //       //
+    //       //     gc.docList.push(f)
+    //       //   }
+    //       // }
+    //
+    //       // $scope.$apply()
+    //     })
+    //   }
+    //
+    //   return gc.docList
     // }
 
-    gc.signIn = function() {
-      if (gapiLib && gapiLib.hasOwnProperty('auth2'))
-        gapiLib.auth2.getAuthInstance().signIn()
-    }
-
-    gc.signOut = function() {
-      if (gapiLib && gapiLib.hasOwnProperty('auth2'))
-        gapiLib.auth2.getAuthInstance().signOut()
-    }
-
-    gc.getDocumentList = function() {
-      var g = gc.getGapi()
-      if (gc.isSignedIn() && g) {
-        g.client.drive.files.list({
-          'pageSize': 10,
-          'fields': "*"
-          // 'fields': "iconLink, id, lastModifyingUser, modifiedTime, name, owners, thumbnailLink"
-        }).then(function(response) {
-          var files = response.result.files
-          if (files && files.length > 0) {
-            for (var i = 0; i < files.length; i++) {
-              var f = files[i]
-              // fetchCommentsFor(f.id)
-
-              docList[f.id] = f
-            }
-          }
-
-          // $scope.$apply()
-        })
-      }
-
-      return docList
-    }
-
-    gc.fetchCommentsFor = function(fID) {
-      var g = gc.getGapi()
-      if (gc.isSignedIn() && g) {
-        g.client.drive.comments.list({
-          'fileId': fID,
-          'fields': "*"
-        }).then(function(resp) {
-          commentList[fID] = resp.result.comments
-        })
-      }
-    }
+    // gc.fetchCommentsFor = function(fID) {
+    //   var g = gc.getGapi()
+    //   if (gc.isSignedIn() && g) {
+    //     g.client.drive.comments.list({
+    //       'fileId': fID,
+    //       'fields': "*"
+    //     }).then(function(resp) {
+    //       commentList[fID] = resp.result.comments
+    //     })
+    //   }
+    // }
 
   }
 
