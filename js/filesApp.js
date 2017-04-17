@@ -8,13 +8,18 @@ angular.module('FilesApp', ['googleSignin'])
 
 
 
-FilesController.$inject = ['$scope','GdriveService']
-function FilesController($scope, GdriveService) {
+FilesController.$inject = ['$scope', '$sce', 'GdriveService']
+function FilesController($scope, $sce, GdriveService) {
     var fc = this
 
     fc.signedIn = false
     fc.files = []
-    var commentList = {}
+    fc.searchPhrase = "weekly"
+    fc.pageItemCount = 5
+    fc.currentPage = null
+    fc.nextPage = null
+
+    fc.commentList = {}
 
     $scope.$on('event:google-signin-success', function(event) {
       console.log('signin success')
@@ -51,11 +56,47 @@ function FilesController($scope, GdriveService) {
     }
 
     fc.fetchFiles = function() {
-      GdriveService.findFiles().then(function() {
+      GdriveService.findFiles(fc.searchPhrase, fc.pageItemCount, fc.nextPage).then(function() {
         fc.files = GdriveService.getFiles()
+        fc.currentPage = fc.nextPage
+        fc.nextPage = GdriveService.getNextPageToken()
+
+        $scope.$apply()
       })
     }
 
+    fc.getOpenCommentsFor = function(fileId) {
+      var comments = []
+
+      if (fileId in fc.commentList)
+      // if (fc.commentList.hasOwnProperty(fileId))
+        comments = fc.commentList[fileId] || comments
+
+      return comments
+    }
+
+    fc.fetchOpenCommentsFor = function(fileId) {
+      GdriveService.findCommentsForFile(fileId).then(function() {
+        fc.commentList[fileId] = GdriveService.getCommentsForFile(fileId)
+
+        $scope.$apply()
+      })
+    }
+
+    fc.getCommentContent = function(comm) {
+      return $sce.trustAsHtml(comm.htmlContent)
+    }
+
+    fc.getQuotedContent = function(comm) {
+      var h = "<i>nothing quoted</i>"
+
+      if (comm.hasOwnProperty('quotedFileContent') &&
+          comm.quotedFileContent.mimeType == 'text/html') {
+        h = comm.quotedFileContent.value
+      }
+
+      return $sce.trustAsHtml(h)
+    }
 
     // gc.getDocumentList = function() {
     //   var g = gc.getGapi()

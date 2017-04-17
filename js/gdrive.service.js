@@ -4,13 +4,13 @@
 angular.module('FilesApp')
   .service('GdriveService', GdriveService)
 
-// GdriveService.$inject = ['$scope']
 function GdriveService() {
   var gd = this
   gd.initialized = false
   gd.gapi = null
 
   gd.files = []
+  gd.comments = {}
 
   gd.loadGapi = function(gapi) {
     gd.gapi = gapi
@@ -46,19 +46,26 @@ function GdriveService() {
     return signedIn
   }
 
-  // gc.getGapi = function() {
-  //   return gapiLib
-  // }
+  gd.findFiles = function(searchPhrase, pageItemCount, pageToken) {
+    pageItemCount = pageItemCount || 50
 
-  gd.findFiles = function() {
     gd.files = []
 
     if (gd.isGapiLoaded() && gd.isSignedIn() ) {
-        return gd.gapi.client.drive.files.list({
-          'pageSize': 10,
-          'fields': "*"
-        }).then(function(response) {
-          response.result.files.map((f) => {
+      var params = {
+        'pageSize': pageItemCount,
+        'fields': "*",
+        'orderBy': "modifiedTime desc"
+      }
+      if (searchPhrase)
+        params.q = "name contains '" + searchPhrase + "'"
+
+      if (pageToken)
+        params.pageToken = pageToken
+
+      return gd.gapi.client.drive.files.list(params)
+        .then(function(response) {
+         response.result.files.map((f) => {
             gd.files.push(f)
           })
         })
@@ -67,6 +74,37 @@ function GdriveService() {
 
   gd.getFiles = function() {
     return gd.files
+  }
+
+  gd.getNextPageToken = function() {
+    return gd.nextPageToken
+  }
+
+  gd.findCommentsForFile = function(fileId) {
+    gd.comments[fileId] = []
+
+    if (gd.isGapiLoaded() && gd.isSignedIn()) {
+      return gapi.client.drive.comments.list({
+        'fileId': fileId,
+        'fields': '*',
+        'includeDeleted': false
+      }).then(function(response) {
+        response.result.comments.map((c) => {
+          gd.comments[fileId].push(c)
+        })
+      })
+    }
+  }
+
+  gd.getCommentsForFile = function(fileId) {
+    // var comments = []
+    //
+    // if (fileId in gd.comments
+    //   comments = gd.comments[fileId] || []
+    //
+    // return comments
+
+    return ((fileId in gd.comments) && gd.comments[fileId]) || []
   }
 }
 
