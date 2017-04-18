@@ -56,6 +56,9 @@ function FilesController($scope, $sce, GdriveService) {
     }
 
     fc.fetchFiles = function() {
+      fc.files = []
+      fc.commentList = {}
+
       GdriveService.findFiles(fc.searchPhrase, fc.pageItemCount, fc.nextPage).then(function() {
         fc.files = GdriveService.getFiles()
         fc.currentPage = fc.nextPage
@@ -98,58 +101,10 @@ function FilesController($scope, $sce, GdriveService) {
       return $sce.trustAsHtml(h)
     }
 
-    // gc.getDocumentList = function() {
-    //   var g = gc.getGapi()
-    //   if (gc.isSignedIn() && g) {
-    //     g.client.drive.files.list({
-    //       'pageSize': 10,
-    //       'fields': "*"
-    //       // 'fields': "iconLink, id, lastModifyingUser, modifiedTime, name, owners, thumbnailLink"
-    //     }).then(function(response) {
-    //       var files = response.result.files
-    //       gc.docList  = response.result.files
-    //       // if (files && files.length > 0) {
-    //       //   for (var i = 0; i < files.length; i++) {
-    //       //     var f = files[i]
-    //       //     // fetchCommentsFor(f.id)
-    //       //
-    //       //     gc.docList.push(f)
-    //       //   }
-    //       // }
-    //
-    //       // $scope.$apply()
-    //     })
-    //   }
-    //
-    //   return gc.docList
-    // }
-
-    // gc.fetchCommentsFor = function(fID) {
-    //   var g = gc.getGapi()
-    //   if (gc.isSignedIn() && g) {
-    //     g.client.drive.comments.list({
-    //       'fileId': fID,
-    //       'fields': "*"
-    //     }).then(function(resp) {
-    //       commentList[fID] = resp.result.comments
-    //     })
-    //   }
-    // }
+    fc.getObjectString = function(o) {
+      return $sce.trustAsHtml(JSON.stringify(o, null, 2))
+    }
 
   }
-
-
-
-
-// CommCtrl.$inject = ['GapiCtrl']
-// function CommCtrl(gapiCtrl) {
-//   var comms = this
-//   var commList = []
-//
-//   comms.fetchCommentsFor(f) = function() {
-//     console.log("looking for comments for " + f)
-//   }
-//
-// }
 
 })()

@@ -65,14 +65,11 @@
   </head>
 <body ng-app="FilesApp">
   <div class="container" ng-controller="FilesController as fc">
-        <!-- localhost dev
-        <google-signin
-          clientid="540312807168-vc7q1q8le7ln4s7ku9l8950d4dv6mebp">
-        -->
+        <!-- localhost dev -->
+        <!-- <google-signin clientid="540312807168-vc7q1q8le7ln4s7ku9l8950d4dv6mebp"> -->
         <!-- production - github.io -->
-        <google-signin
-          clientid="540312807168-pjdpttm5me3ieis2gvs5uq1195at77lh"
-        ></google-signin>
+        <google-signin clientid="540312807168-pjdpttm5me3ieis2gvs5uq1195at77lh">
+      </google-signin>
         <!-- <p>^ This is a Google Plus sign-in button</p> -->
       <div class="span6">
         <button ng-hide="fc.signedIn" ng-click="fc.signIn()"
@@ -106,7 +103,7 @@
         <img ng-src="{{ item.thumbnailLink }}"/>&nbsp;<a ng-href="{{ item.webViewLink }}" target="_blank">{{ item.name }}</a>
         &nbsp;<button class="btn btn-primary" ng-click="fc.fetchOpenCommentsFor(item.id)">Get AIs</button><br/>
         <table ng-show="fc.getOpenCommentsFor(item.id).length > 0" class="table table-striped">
-          <tr ng-repeat="ai in fc.getOpenCommentsFor(item.id)">
+          <tr ng-repeat="ai in fc.getOpenCommentsFor(item.id)" ng-hide="ai.resolved">
             <td>{{ $index + 1 }}</td>
             <td>
               <img ng-src="{{ ai.author.photoLink }}"/><br/>
@@ -115,7 +112,10 @@
             <td>
               <p ng-bind-html="fc.getQuotedContent(ai)" class="bg-warning"></p><br/>
               <div ng-bind-html="fc.getCommentContent(ai)"></div><br/>
-
+            </td>
+            <!-- <td>
+              <p ng-bind-html="fc.getObjectString(ai)"></p>
+            </td> -->
           </tr>
         </table>
 

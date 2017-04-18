@@ -50,6 +50,7 @@ function GdriveService() {
     pageItemCount = pageItemCount || 50
 
     gd.files = []
+    gd.comments = {}
 
     if (gd.isGapiLoaded() && gd.isSignedIn() ) {
       var params = {
