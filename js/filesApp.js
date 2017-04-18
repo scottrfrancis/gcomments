@@ -14,7 +14,7 @@ function FilesController($scope, $sce, GdriveService) {
 
     fc.signedIn = false
     fc.files = []
-    fc.searchPhrase = "weekly"
+    fc.searchPhrase = "Weekly Report"
     fc.pageItemCount = 5
     fc.currentPage = null
     fc.nextPage = null
