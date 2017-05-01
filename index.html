@@ -98,12 +98,18 @@
      <ul class="list-unstyled">
       <li ng-repeat="item in fc.files">
         <br/>
+        <!-- <p ng-show="fc.hasCommentsFor(item.id)">{{ fc.}} -->
         <!-- {{ item }} -->
         <img ng-src="{{ item.iconLink }}"/>
         <img ng-src="{{ item.thumbnailLink }}"/>&nbsp;<a ng-href="{{ item.webViewLink }}" target="_blank">{{ item.name }}</a>
         &nbsp;<button class="btn btn-primary" ng-click="fc.fetchOpenCommentsFor(item.id)">Get AIs</button><br/>
+        <p ng-show="(fc.hasCommentsFor(item.id)) && (fc.getOpenCommentsFor(item.id).length <= 0)"
+          class="bg-warning">
+          No Comments in Document
+        </p>
         <table ng-show="fc.getOpenCommentsFor(item.id).length > 0" class="table table-striped">
-          <tr ng-repeat="ai in fc.getOpenCommentsFor(item.id)" ng-hide="ai.resolved">
+          <tr ng-repeat="ai in fc.getOpenCommentsFor(item.id)" >
+          <!-- ng-hide="ai.resolved" -->
             <td>{{ $index + 1 }}</td>
             <td>
               <img ng-src="{{ ai.author.photoLink }}"/><br/>
