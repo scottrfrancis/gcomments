@@ -19,9 +19,9 @@ I've hard coded various things to accelerate the particular workflow for my grou
 There are many things that could be added, if you think of any, please add to the issues list.
 
 ## limitations
-I can only work with the API google exports -- v3.  As of this writing, that version does not yet provide visibility into what comments have been _assigned_ nor to _whom_.  I also only show the root comment and not the full thread.  For our purposes, that seemed reasonable as it was enough to cue us to open the source doc and discuss/close the issues there.
+I can only work with the API google exports -- v3.  As of this writing, that version does not yet provide visibility into what comments have been _assigned_ nor to _whom_.  
 
-I'm hopeful Google will provide that visibility in a future version of the API.
+Replies to the original are shown in a kind of threaded manner.  Note that I suppress deleted and 'empty' replies.  Empty replies are usually a mark as resolved/reopened.  Thinking I can use this long term to perhaps figure out the identity of the assigned party.
 
 ## conclusion
 All in all a pretty fun, but challenging project to get the google api integrated in to angular and that pattern could be pretty handy for others. The global message passing is a bit ugly, but far from the worst possible solution.  Likewise installing the lib via a directive seems clunky.
