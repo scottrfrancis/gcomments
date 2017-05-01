@@ -66,9 +66,9 @@
 <body ng-app="FilesApp">
   <div class="container" ng-controller="FilesController as fc">
         <!-- localhost dev -->
-        <!-- <google-signin clientid="540312807168-vc7q1q8le7ln4s7ku9l8950d4dv6mebp"> -->
+      <!-- <google-signin clientid="540312807168-vc7q1q8le7ln4s7ku9l8950d4dv6mebp"> -->
         <!-- production - github.io -->
-        <google-signin clientid="540312807168-pjdpttm5me3ieis2gvs5uq1195at77lh">
+      <google-signin clientid="540312807168-pjdpttm5me3ieis2gvs5uq1195at77lh">
       </google-signin>
         <!-- <p>^ This is a Google Plus sign-in button</p> -->
       <div class="span6">
@@ -98,7 +98,6 @@
      <ul class="list-unstyled">
       <li ng-repeat="item in fc.files">
         <br/>
-        <!-- <p ng-show="fc.hasCommentsFor(item.id)">{{ fc.}} -->
         <!-- {{ item }} -->
         <img ng-src="{{ item.iconLink }}"/>
         <img ng-src="{{ item.thumbnailLink }}"/>&nbsp;<a ng-href="{{ item.webViewLink }}" target="_blank">{{ item.name }}</a>
@@ -118,38 +117,32 @@
             <td>
               <p ng-bind-html="fc.getQuotedContent(ai)" class="bg-warning"></p><br/>
               <div ng-bind-html="fc.getCommentContent(ai)"></div><br/>
+              {{ fc.getReplies(ai).length }} Replies
+              <table ng-show="fc.getReplies(ai).length > 0" class="table table-striped">
+                <tr ng-repeat="r in fc.getReplies(ai)">
+                  <td width="20">
+                    {{ r.action }}
+                  </td>
+                  <td>
+                    {{ r.author.displayName }}
+                  </td>
+                  <td>
+                    <!-- {{ r }} -->
+                    <!-- <p ng-show="fc.replyIsActive(r)" -->
+                    <p ng-bind-html="fc.getReplyContent(r)"></p><br/>
+                  </td>
+                </tr>
+              </table>
             </td>
             <!-- <td>
               <p ng-bind-html="fc.getObjectString(ai)"></p>
             </td> -->
           </tr>
         </table>
-
-
-
-
-        <!-- <ol ng-show="fc.getOpenCommentsFor(item.id).length > 0">
-          <li ng-repeat="ai in fc.getOpenCommentsFor(item.id)">
-           {{ ai }} <br/>
-            <span ng-hide="ai.resolved" class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
-            <span ng-show="ai.resolved" class="glyphicon glyphicon-check" aria-hidden="true"></span>
-            <p ng-bind-html="fc.getQuotedContent(ai)" class="bg-warning"></p><br/>
-            <div ng-bind-html="fc.getCommentContent(ai)"></div><br/>
-            <img ng-src="{{ ai.author.photoLink }}"/>&nbsp;{{ ai.author.displayName }}
-          </li>
-        </ol> -->
       </li>
      </ul>
      <!-- <div class="emptyMessage" ng-if="docList.itemList.length <= 0">no files!</div> -->
     </div>
-
-    <!-- <div class="col-md-6" ng-controller="ActionItemController as actionList">
-     <h2>Open Action Items:</h2>
-     <ul>
-      <li ng-repeat="item in actionList.itemList">Bought {{ item.htmlContent }}</li>
-     </ul>
-     <div class="emptyMessage" ng-if="actionList.itemList.length <= 0">No Open Actions.</div>
-    </div> -->
   </div>
 
 

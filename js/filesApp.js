@@ -72,7 +72,6 @@ function FilesController($scope, $sce, GdriveService) {
       var comments = []
 
       if (fc.hasCommentsFor(fileId))
-      // if (fc.commentList.hasOwnProperty(fileId))
         comments = fc.commentList[fileId] || comments
 
       return comments
@@ -80,7 +79,6 @@ function FilesController($scope, $sce, GdriveService) {
 
     fc.fetchOpenCommentsFor = function(fileId) {
       GdriveService.findCommentsForFile(fileId).then(function() {
-        // fc.commentList[fileId] = GdriveService.getCommentsForFile(fileId)
         fc.commentList[fileId] = []
 
         GdriveService.getCommentsForFile(fileId).forEach((c) => {
@@ -99,6 +97,25 @@ function FilesController($scope, $sce, GdriveService) {
 
     fc.getCommentContent = function(comm) {
       return $sce.trustAsHtml(comm.htmlContent)
+    }
+
+    fc.getReplies = function(comm) {
+      var replies = []
+
+      comm.replies.forEach((r) => {
+        if (fc.replyIsActive(r))
+          replies.push(r)
+      })
+
+      return replies
+    }
+
+    fc.getReplyContent = function(reply) {
+      return $sce.trustAsHtml(reply.htmlContent)
+    }
+
+    fc.replyIsActive = function(reply) {
+      return (!reply.deleted) && (reply.htmlContent != '')
     }
 
     fc.getQuotedContent = function(comm) {
