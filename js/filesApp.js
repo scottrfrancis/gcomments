@@ -3,9 +3,6 @@
 
 angular.module('FilesApp', ['googleSignin'])
   .controller('FilesController', FilesController)
-  // .service('CommentsService', CommentsService)
-  // .controller('CommCtrl', CommCtrl)
-
 
 
 FilesController.$inject = ['$scope', '$sce', 'GdriveService']

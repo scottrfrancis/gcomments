@@ -10,60 +10,9 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-    <!-- Latest compiled and minified JavaScript -->
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
-
-    <!-- referenced by the signin lib -->
-    <!-- <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.0/cerulean/bootstrap.min.css" rel="stylesheet"> -->
-
-    <!-- /*<style>
-      .emptyMessage {
-        font-weight: bold;
-        color: red;
-        font-size: 1.2em;
-      }
-      li {
-        margin-bottom: 7px;
-        font-size: 1.2em;
-      }
-      li > button {
-        margin-left: 6px;
-      }
-      button > span {
-        color: green;
-      }
-    </style>*/ -->
-
-
-    <!-- <script>
-      var Gapi
-
-      function googleOnLoadCallback(){
-          var initClient = function() {
-            gapi.client.init({
-              discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
-              clientId: "540312807168-vc7q1q8le7ln4s7ku9l8950d4dv6mebp.apps.googleusercontent.com",
-              scope: 'https://www.googleapis.com/auth/drive'
-            }).then(function() {
-
-              Gapi = gapi
-            })
-          }
-
-          gapi.load('client:auth2', initClient)
-      }
-    </script> -->
-    <!-- <script async defer src="https://apis.google.com/js/api.js"
-      onload="googleOnLoadCallback()"
-    ></script> -->
-
-    <!--  this should be handled by the new, fancy directive
-    <script src="https://apis.google.com/js/api.js?onload=googleOnLoadCallback"></script>
-    -->
-
-
   </head>
 <body ng-app="FilesApp">
+  <br/>
   <div class="container" ng-controller="FilesController as fc">
         <!-- localhost dev -->
       <!-- <google-signin clientid="540312807168-vc7q1q8le7ln4s7ku9l8950d4dv6mebp"> -->
@@ -80,8 +29,6 @@
 
   <h2 ng-show="fc.isSignedIn()">Open Actions from Google Docs</h2>
 
-
-
   <div class="row">
     <div class="col-md-6">
      <h4>Google Docs:</h4>
@@ -94,7 +41,8 @@
      <br/>
      <button ng-click="fc.fetchFiles()"
        class="btn btn-success">Find Files</button>
-
+    </div>
+    <div class="col-md-12">
      <ul class="list-unstyled">
       <li ng-repeat="item in fc.files">
         <br/>
@@ -103,12 +51,11 @@
         <img ng-src="{{ item.thumbnailLink }}"/>&nbsp;<a ng-href="{{ item.webViewLink }}" target="_blank">{{ item.name }}</a>
         &nbsp;<button class="btn btn-primary" ng-click="fc.fetchOpenCommentsFor(item.id)">Get AIs</button><br/>
         <p ng-show="(fc.hasCommentsFor(item.id)) && (fc.getOpenCommentsFor(item.id).length <= 0)"
-          class="bg-warning">
+          class="bg-success">
           No Comments in Document
         </p>
         <table ng-show="fc.getOpenCommentsFor(item.id).length > 0" class="table table-striped">
           <tr ng-repeat="ai in fc.getOpenCommentsFor(item.id)" >
-          <!-- ng-hide="ai.resolved" -->
             <td>{{ $index + 1 }}</td>
             <td>
               <img ng-src="{{ ai.author.photoLink }}"/><br/>

@@ -23,6 +23,8 @@ I can only work with the API google exports -- v3.  As of this writing, that ver
 
 Replies to the original are shown in a kind of threaded manner.  Note that I suppress deleted and 'empty' replies.  Empty replies are usually a mark as resolved/reopened.  Thinking I can use this long term to perhaps figure out the identity of the assigned party.
 
+Note that gdoc has this cool 'assign to' feature, but I have not been able to figure out how to discover that detail.  
+
 ## conclusion
 All in all a pretty fun, but challenging project to get the google api integrated in to angular and that pattern could be pretty handy for others. The global message passing is a bit ugly, but far from the worst possible solution.  Likewise installing the lib via a directive seems clunky.
 

@@ -98,13 +98,6 @@ function GdriveService() {
   }
 
   gd.getCommentsForFile = function(fileId) {
-    // var comments = []
-    //
-    // if (fileId in gd.comments
-    //   comments = gd.comments[fileId] || []
-    //
-    // return comments
-
     return ((fileId in gd.comments) && gd.comments[fileId]) || []
   }
 }
