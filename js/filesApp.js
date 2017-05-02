@@ -57,7 +57,9 @@ function FilesController($scope, $sce, GdriveService) {
       fc.commentList = {}
 
       GdriveService.findFiles(fc.searchPhrase, fc.pageItemCount, fc.nextPage).then(function() {
-        fc.files = GdriveService.getFiles()
+        fc.files = GdriveService.getFiles().sort(function(a, b) {
+          if (a.name > b.name) return -1
+          else return 1 })
         fc.currentPage = fc.nextPage
         fc.nextPage = GdriveService.getNextPageToken()
 
